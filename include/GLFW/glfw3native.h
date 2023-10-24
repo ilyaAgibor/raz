@@ -1,4 +1,4 @@
-/*************************************************************************
+/*
  * GLFW 3.3 - www.glfw.org
  * A library for OpenGL, window and input
  *------------------------------------------------------------------------
@@ -24,7 +24,7 @@
  * 3. This notice may not be removed or altered from any source
  *    distribution.
  *
- *************************************************************************/
+ */
 
 #ifndef _glfw3_native_h_
 #define _glfw3_native_h_
@@ -103,13 +103,6 @@ extern "C" {
    #undef GLFW_APIENTRY_DEFINED
   #endif
   #include <windows.h>
- #elif defined(GLFW_EXPOSE_NATIVE_COCOA) || defined(GLFW_EXPOSE_NATIVE_NSGL)
-  #if defined(__OBJC__)
-   #import <Cocoa/Cocoa.h>
-  #else
-   #include <ApplicationServices/ApplicationServices.h>
-   #include <objc/objc.h>
-  #endif
  #elif defined(GLFW_EXPOSE_NATIVE_X11) || defined(GLFW_EXPOSE_NATIVE_GLX)
   #include <X11/Xlib.h>
   #include <X11/extensions/Xrandr.h>
