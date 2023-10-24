@@ -1,7 +1,8 @@
-#include <GLFW/glfw3.h>
 #include<stdio.h>
+#include "engine.h"
 
 int main(){
-    printf("raz.\n");
+    printf("Raz.\n");
+    run_engine();
     return 0;
 }
