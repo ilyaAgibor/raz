@@ -1,7 +1,5 @@
 #include "window.h"
 
-
-
 Window* create_window(int width, int height, const char* title){
     Window* window = malloc(sizeof(Window));
     if (!glfwInit()){
@@ -36,4 +34,5 @@ void close_window(Window* window){
     glfwDestroyWindow(window->handle);
     glfwTerminate();
     free(window);
+    printf("engine terminated\n");
 }

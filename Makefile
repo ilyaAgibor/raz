@@ -4,11 +4,11 @@ CXX := gcc
 WARNINGS := -Wall
 ifeq ($(OS), Windows_NT)
 	LDLIBS := -Iinclude -Llib -lglfw3 -lglfw3dll -lgdi32 -DGLFW_DLL
-	OUTPUT := bin/out.exe
+	OUTPUT := bin/RazEngine.exe
 	DELCOM := rm -f
 else
 	LDLIBS := -lglfw
-	OUTPUT := bin/out
+	OUTPUT := bin/RazEngine
 	DELCOM := rm -f
 endif
 CXXFLAGS := $(LDLIBS) $(WARNINGS) -MMD -MP -Wl,-subsystem,console -g
