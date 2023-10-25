@@ -1,5 +1,6 @@
 #include "shaders.h"
 
+
 const char* read_file(const char* path){
     FILE* file = fopen(path, "r");
     if (file == NULL) {
@@ -29,7 +30,7 @@ const char* read_file(const char* path){
     return content;
 }
 
-unsigned int create_shader(const char* vert, const char* frag){
+Shader create_shader(const char* vert, const char* frag){
     //reading shader files
     const char* vert_cont = read_file(vert);
     const char* frag_cont = read_file(frag);    
@@ -58,15 +59,15 @@ unsigned int create_shader(const char* vert, const char* frag){
     }
 
     //linking shaders
-    unsigned int shader = glCreateProgram();
-    glAttachShader(shader, vertex_shader);
-    glAttachShader(shader, fragment_shader);
-    glLinkProgram(shader);
+    unsigned int shader_program = glCreateProgram();
+    glAttachShader(shader_program, vertex_shader);
+    glAttachShader(shader_program, fragment_shader);
+    glLinkProgram(shader_program);
 
     memset(info_log, 0, 512);
-    glGetProgramiv(shader, GL_LINK_STATUS, &success);
+    glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
     if(!success) {
-        glGetProgramInfoLog(shader, 512, NULL, info_log);
+        glGetProgramInfoLog(shader_program, 512, NULL, info_log);
         printf("failed linking shaders:\n%s\n", info_log);
     }
 
@@ -76,5 +77,59 @@ unsigned int create_shader(const char* vert, const char* frag){
     glDeleteShader(fragment_shader);
     free(frag_cont);
     free(vert_cont);
+    Shader shader = {0};
+    shader.id = shader_program;
     return shader;
+}
+
+int get_uniform(Shader* shader, const char* name){
+    UniformNote* tmp = shader->head;
+    UniformNote* slave = shader->head;
+    while(tmp){
+        if(!strcmp(tmp->cach->name, name) ){
+            return tmp->cach->id;
+        }
+        tmp = tmp->next;
+    }
+    int res = glGetUniformLocation(shader->id, name);
+    if(res < 0){
+        printf("coudn't find uniform with name %s\n", name);
+    }
+    else{
+        shader->head = malloc(sizeof(UniformNote));
+        shader->head->cach = malloc(sizeof(UniformCach));
+        shader->head->next = slave;
+        strcpy(shader->head->cach->name, name);
+        shader->head->cach->id = res;
+    }
+    return res;
+}
+
+void delete_shader(Shader* shader){
+    UniformNote* tmp = shader->head;
+    while(tmp){
+        UniformNote* slave = tmp;
+        tmp = tmp->next;
+        free(slave->cach);
+        free(slave);
+    }
+}
+
+void set_uniform_bool(Shader* shader, const char* name, bool value){
+    glUniform1i(get_uniform(shader, name), (int)value);
+}
+void set_uniform_int(Shader* shader, const char* name, int value){
+    glUniform1i(get_uniform(shader, name), (int)value);
+}
+void set_uniform_float(Shader* shader, const char* name, float value){
+    glUniform1f(get_uniform(shader, name), value);
+}
+void set_uniform_vec2(Shader* shader, const char* name, float x, float y){
+    glUniform2f(get_uniform(shader, name), x, y);
+}
+void set_uniform_vec3(Shader* shader, const char* name, float x, float y, float z){
+    glUniform3f(get_uniform(shader, name), x, y, z);
+}
+void set_uniform_vec4(Shader* shader, const char* name, float x, float y, float z, float w){
+    glUniform4f(get_uniform(shader, name), x, y, z, w);
 }
