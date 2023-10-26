@@ -36,6 +36,24 @@ mat4x4 create_mat4x4_vectors(vec4 i, vec4 j, vec4 k, vec4 e){
     return matrix;
 }
 
+mat4x4 create_mat4x4_floats(float x1, float x2, float x3, float x4,
+                            float y1, float y2, float y3, float y4,
+                            float z1, float z2, float z3, float z4,
+                            float w1, float w2, float w3, float w4){
+    return (mat4x4){x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, w1, w2, w3, w4};
+}
+mat4x4 prespective_matrix(float aspect, float fov, float near, float far){
+    float f = 1/(tanf(radians(fov/2.0f)));
+    mat4x4 prespective = create_mat4x4_floats(
+        aspect*f, 0.0f, 0.0f, 0.0f,
+        0.0f, f, 0.0f, 0.0f,
+        0.0f, 0.0f, (far)/(far-near), -(far*near)/(far-near),
+        0.0f, 0.0f, 1.0f, 0.0f
+    );
+    return prespective;
+}
+
+
 mat4x4 multiply_mat4x4_mat4x4(mat4x4* a, mat4x4* b){
     mat4x4 result = {0};
     for (int i = 0; i < 4; i++) {

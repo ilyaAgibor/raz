@@ -24,17 +24,23 @@ typedef struct mat4x4{
 
 mat4x4 create_mat4x4_float(float value);
 mat4x4 create_mat4x4_vec4(vec4 axis);
+mat4x4 create_mat4x4_floats(float x1, float x2, float x3, float x4,
+                            float y1, float y2, float y3, float y4,
+                            float z1, float z2, float z3, float z4,
+                            float w1, float w2, float w3, float w4);
+mat4x4 prespective_matrix(float aspect, float fov, float far, float near);
+
 vec4 multiply_mat4x4_vec4(mat4x4* matrix, vec4* vector);
 mat4x4 multiply_mat4x4_mat4x4(mat4x4* a, mat4x4* b);
 mat4x4 translate_mat4x4(mat4x4* matrix, vec3 translation);
 mat4x4 scale_mat4x4(mat4x4* matrix, vec3 scale);
 mat4x4 rotate_mat4x4(mat4x4* matrix, float a, vec3 axis);
+
+
 float degree(float radians);
 float radians(float degrees);
 
 void print_mat4x4(mat4x4* matrix);
 void print_vec4(vec4* vec);
-
-
 
 #endif
