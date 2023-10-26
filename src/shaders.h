@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <glad/glad.h>
+#include "razm.h"
 
 typedef unsigned char bool;
 #define TRUE 1
@@ -34,6 +35,7 @@ void set_uniform_float(Shader* shader, const char* name, float value);
 void set_uniform_vec2(Shader* shader, const char* name, float x, float y);
 void set_uniform_vec3(Shader* shader, const char* name, float x, float y, float z);
 void set_uniform_vec4(Shader* shader, const char* name, float x, float y, float z, float w);
+void set_uniform_mat4x4(Shader* shader, const char* name, mat4x4* matrix);
 
 
 

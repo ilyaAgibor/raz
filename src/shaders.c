@@ -133,3 +133,7 @@ void set_uniform_vec3(Shader* shader, const char* name, float x, float y, float 
 void set_uniform_vec4(Shader* shader, const char* name, float x, float y, float z, float w){
     glUniform4f(get_uniform(shader, name), x, y, z, w);
 }
+
+void set_uniform_mat4x4(Shader* shader, const char* name, mat4x4* matrix){
+    glUniformMatrix4fv(get_uniform(shader, name), 1, GL_FALSE, matrix->data);
+}
