@@ -77,6 +77,10 @@ void run_engine(){
     mat4x4 trans = create_mat4x4(1.0f);
     mat4x4 prespective = prespective_matrix(800.0f/1200.0f, 90.0f, 1.0f, 15.0f);
 
+    vec4 b = {10, 4, 3, 5};
+    b = normlize_vector(&b);
+    print_vec4(&b);
+
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     t = clock() - t;
     double time_taken = ((double)t)/CLOCKS_PER_SEC;
@@ -88,8 +92,9 @@ void run_engine(){
 
         glUseProgram(triangle_shader.id);
         trans = create_mat4x4(1.0f);
-        trans = rotate_mat4x4(&trans, radians(a), (vec3){0.0f,1.0f,0.0f});
-        trans = translate_mat4x4(&trans, (vec3){0.0,0.0f,2.0f});
+        trans = rotate_mat4x4(&trans, radians(a), (vec3){1.0f,1.0f,1.0f});
+        //trans = rotate_mat4x4(&trans, radians(a), (vec3){0.0f,1.0f,0.0f});
+        trans = translate_mat4x4(&trans, (vec3){0.0,0.0f,4.0f});
 
         mat4x4 mvp = multiply_mat4x4_mat4x4(&prespective, &trans);
         set_uniform_mat4x4(&triangle_shader, "mvp", &mvp);

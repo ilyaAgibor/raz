@@ -53,6 +53,21 @@ mat4x4 prespective_matrix(float aspect, float fov, float near, float far){
     return prespective;
 }
 
+float magnitude_vec3(vec3* vector){
+    return (float)sqrt(vector->x*vector->x + vector->y * vector->y + vector->z*vector->z);
+}
+float magnitude_vec4(vec4* vector){
+    return (float)sqrt(vector->x*vector->x + vector->y * vector->y + vector->z*vector->z + vector->w * vector->w);
+}
+
+vec3 normlize_vec3(vec3* vector){
+    float mag = magnitude_vec3(vector);
+    return (vec3){vector->x/mag, vector->y/mag, vector->z/mag};
+}
+vec4 normlize_vec4(vec4* vector){
+    float mag = magnitude_vec4(vector);
+    return (vec4){vector->x/mag, vector->y/mag, vector->z/mag, vector->w/mag};
+}
 
 mat4x4 multiply_mat4x4_mat4x4(mat4x4* a, mat4x4* b){
     mat4x4 result = {0};
@@ -82,7 +97,8 @@ mat4x4 scale_mat4x4(mat4x4* matrix, vec3 scale){
     return result;
 }
 
-mat4x4 rotate_mat4x4(mat4x4* matrix, float a, vec3 axis){
+mat4x4 rotate_mat4x4(mat4x4* matrix, float a, vec3 axis_vector){
+    vec3 axis = normlize_vec3(&axis_vector);
     mat4x4 rotation_matrix = {0};
     rotation_matrix.data[3][3] = 1.0f;
 
