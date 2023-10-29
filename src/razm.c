@@ -8,6 +8,10 @@ float radians(float degrees) {
     return degrees * (M_PI / 180.0f);
 }
 
+float dot_vec3(vec3 a, vec3 b){
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
 mat4x4 create_mat4x4_float(float value){
     mat4x4 matrix = {0};
     for(int i = 0; i < 4; i++)
@@ -53,20 +57,56 @@ mat4x4 prespective_matrix(float aspect, float fov, float near, float far){
     return prespective;
 }
 
-float magnitude_vec3(vec3* vector){
-    return (float)sqrt(vector->x*vector->x + vector->y * vector->y + vector->z*vector->z);
-}
-float magnitude_vec4(vec4* vector){
-    return (float)sqrt(vector->x*vector->x + vector->y * vector->y + vector->z*vector->z + vector->w * vector->w);
+
+mat4x4 look_at(vec3 pos, vec3 target, vec3 up){
+    vec3 forward = normlize_vec3(target);
+    vec3 right = normlize_vec3(cross_vec3(up, forward));
+    vec3 updated_up = cross_vec3(right, forward);
+    mat4x4 mat = {right.x,       right.y,        right.z,         -pos.x,
+                  updated_up.x,  updated_up.y,   updated_up.z,    -pos.y,
+                  forward.x,     forward.y,      forward.z,       -pos.z,
+                  0.0f, 0.0f, 0.0f, 1.0f };
+    return mat;
 }
 
-vec3 normlize_vec3(vec3* vector){
-    float mag = magnitude_vec3(vector);
-    return (vec3){vector->x/mag, vector->y/mag, vector->z/mag};
+vec3 add_vec3(vec3 a, vec3 b){
+    return (vec3){a.x + b.x, a.y + b.y, a.z + b.z};
 }
-vec4 normlize_vec4(vec4* vector){
+vec3 sub_vec3(vec3 a, vec3 b){
+    return (vec3){a.x - b.x, a.y - b.y, a.z - b.z};
+}
+
+vec3 multiply_vec3(vec3 a, float s){
+    return (vec3){a.x * s, a.y * s, a.z * s};
+}
+vec3 cross_vec3(vec3 a, vec3 b){
+    vec3 result = {0};
+    result.x = a.y*b.z - a.z*b.y;
+    result.y = a.z*b.x - a.x*b.z;
+    result.z = a.x*b.y - a.y*b.x;
+    return result;
+}
+vec4 add_vec4(vec4 a, vec4 b){
+    return (vec4){a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w};
+}
+vec4 sub_vec4(vec4 a, vec4 b){
+    return (vec4){a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w};
+}
+
+float magnitude_vec3(vec3 vector){
+    return (float)sqrt(vector.x*vector.x + vector.y * vector.y + vector.z*vector.z);
+}
+float magnitude_vec4(vec4 vector){
+    return (float)sqrt(vector.x*vector.x + vector.y * vector.y + vector.z*vector.z + vector.w * vector.w);
+}
+
+vec3 normlize_vec3(vec3 vector){
+    float mag = magnitude_vec3(vector);
+    return (vec3){vector.x/mag, vector.y/mag, vector.z/mag};
+}
+vec4 normlize_vec4(vec4 vector){
     float mag = magnitude_vec4(vector);
-    return (vec4){vector->x/mag, vector->y/mag, vector->z/mag, vector->w/mag};
+    return (vec4){vector.x/mag, vector.y/mag, vector.z/mag, vector.w/mag};
 }
 
 mat4x4 multiply_mat4x4_mat4x4(mat4x4* a, mat4x4* b){
@@ -98,7 +138,7 @@ mat4x4 scale_mat4x4(mat4x4* matrix, vec3 scale){
 }
 
 mat4x4 rotate_mat4x4(mat4x4* matrix, float a, vec3 axis_vector){
-    vec3 axis = normlize_vec3(&axis_vector);
+    vec3 axis = normlize_vec3(axis_vector);
     mat4x4 rotation_matrix = {0};
     rotation_matrix.data[3][3] = 1.0f;
 

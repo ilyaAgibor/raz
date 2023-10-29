@@ -2,6 +2,7 @@
 #define ENGINE_H_INCLUDE
 #include "window.h"
 #include "shaders.h"
+#include "camera.h"
 #include "razm.h"
 #include <time.h>
 #include <stdio.h>

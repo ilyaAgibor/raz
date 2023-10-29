@@ -42,7 +42,7 @@ unsigned int indices[] = {
 void run_engine(){
     clock_t t = clock();
     Window* window = create_window(1200, 800, "raz");
-    
+    Camera camera = {0};
     //setup opengl
     //glEnable(GL_CULL_FACE);
     //glFrontFace(GL_CW);
@@ -76,11 +76,8 @@ void run_engine(){
 
     mat4x4 trans = create_mat4x4(1.0f);
     mat4x4 prespective = prespective_matrix(800.0f/1200.0f, 90.0f, 1.0f, 15.0f);
-
-    vec4 b = {10, 4, 3, 5};
-    b = normlize_vector(&b);
-    print_vec4(&b);
-
+    camera.position.y += 1.5f;
+    mat4x4 view = look_at(camera.position, (vec3){0.0f,0.5f,1.0f}, (vec3){0.0f, 1.0f, 0.0f});
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     t = clock() - t;
     double time_taken = ((double)t)/CLOCKS_PER_SEC;
@@ -89,14 +86,13 @@ void run_engine(){
     while (!glfwWindowShouldClose(window->handle))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        //
         glUseProgram(triangle_shader.id);
         trans = create_mat4x4(1.0f);
-        trans = rotate_mat4x4(&trans, radians(a), (vec3){1.0f,1.0f,1.0f});
-        //trans = rotate_mat4x4(&trans, radians(a), (vec3){0.0f,1.0f,0.0f});
-        trans = translate_mat4x4(&trans, (vec3){0.0,0.0f,4.0f});
-
-        mat4x4 mvp = multiply_mat4x4_mat4x4(&prespective, &trans);
+        trans = rotate_mat4x4(&trans, radians(a), (vec3){0.0f,1.0f,0.0f});
+        trans = translate_mat4x4(&trans, (vec3){0.0,0.0f,5.0f});
+        mat4x4 viewspace = multiply_mat4x4_mat4x4(&view, &trans);
+        mat4x4 mvp = multiply_mat4x4_mat4x4( &prespective, &viewspace);
         set_uniform_mat4x4(&triangle_shader, "mvp", &mvp);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
